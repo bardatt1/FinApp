@@ -1,10 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 function ProfilePage() {
+  // Mock user data for now; replace with API or AuthContext
+  const [user, setUser] = useState({
+    username: 'JohnDoe',
+    email: 'johndoe@example.com',
+  });
+
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    background: 'linear-gradient(135deg, #6a11cb, #6a6f76ff)',
+    fontFamily: 'Poppins, sans-serif',
+  };
+
+  const cardStyle = {
+    backgroundColor: '#fff',
+    padding: '40px',
+    borderRadius: '12px',
+    width: '400px',
+    boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+    textAlign: 'center',
+  };
+
+  const titleStyle = {
+    marginBottom: '20px',
+    color: '#333',
+  };
+
+  const infoStyle = {
+    margin: '10px 0',
+    fontSize: '16px',
+    color: '#555',
+  };
+
+  const buttonStyle = {
+    marginTop: '20px',
+    padding: '12px 20px',
+    border: 'none',
+    borderRadius: '8px',
+    background: '#2575fc',
+    color: '#fff',
+    fontSize: '16px',
+    cursor: 'pointer',
+  };
+
+  const handleLogout = () => {
+    // Replace with actual logout logic
+    alert('Logged out!');
+    window.location.href = '/login';
+  };
+
   return (
-    <div>
-      <h2>My Profile</h2>
-      <p>Profile information will appear here.</p>
+    <div style={containerStyle}>
+      <div style={cardStyle}>
+        <h2 style={titleStyle}>Profile</h2>
+        <p style={infoStyle}><strong>Username:</strong> {user.username}</p>
+        <p style={infoStyle}><strong>Email:</strong> {user.email}</p>
+
+        <button style={buttonStyle} onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
 }
