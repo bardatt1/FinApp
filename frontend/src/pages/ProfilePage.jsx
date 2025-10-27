@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ProfilePage() {
-  // Mock user data for now; replace with API or AuthContext
-  const [user, setUser] = useState({
-    username: 'JohnDoe',
-    email: 'johndoe@example.com',
-  });
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Check if user is logged in (replace with your Auth logic)
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (!storedUser) {
+      // If no user is logged in, redirect to login page
+      navigate('/login');
+    } else {
+      setUser(storedUser);
+    }
+  }, [navigate]);
 
   const containerStyle = {
     display: 'flex',
@@ -48,10 +58,14 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
-    // Replace with actual logout logic
-    alert('Logged out!');
-    window.location.href = '/login';
+    // Clear user data and redirect to login
+    localStorage.removeItem('user');
+    navigate('/login');
   };
+
+  if (!user) {
+    return null; // Optional: You can show a loading spinner here
+  }
 
   return (
     <div style={containerStyle}>
@@ -59,7 +73,6 @@ function ProfilePage() {
         <h2 style={titleStyle}>Profile</h2>
         <p style={infoStyle}><strong>Username:</strong> {user.username}</p>
         <p style={infoStyle}><strong>Email:</strong> {user.email}</p>
-
         <button style={buttonStyle} onClick={handleLogout}>Logout</button>
       </div>
     </div>
