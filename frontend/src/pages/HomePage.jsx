@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from '../components/ui/Banner';
 import CategoryCard from '../components/ui/CategoryCard';
 import { mockCategories, mockProducts } from '../data/mockData';
 
 function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 4);
+  const featuredProducts = mockProducts.slice(0, 6);
+  const scrollRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const scrollToIndex = (index) => {
+    if (scrollRef.current) {
+      const cardWidth = 280 + 32; // card width + gap
+      scrollRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: 'smooth'
+      });
+      setCurrentIndex(index);
+    }
+  };
 
   return (
     <main className="page home-page">
@@ -28,21 +41,38 @@ function HomePage() {
         </div>
       </div>
 
-      <section className="section">
+      <section className="featured-products">
         <h2>Featured Products</h2>
-        <div className="products-grid">
-          {featuredProducts.map(product => (
-            <div key={product.id} className="product-card">
-              <img src={product.imageUrl} alt={product.name} />
-              <h3>{product.name}</h3>
-              <p className="product-price">${product.price}</p>
-              <p className="product-rating">⭐ {product.rating} ({product.reviews} reviews)</p>
-              <Link to={`/products/${product.id}`} className="view-product-btn">
-                View Product
-              </Link>
-            </div>
+        
+        <div className="products-scroll-container">
+          <div className="products-scroll" ref={scrollRef}>
+            {featuredProducts.map(product => (
+              <div key={product.id} className="product-card">
+                <img src={product.imageUrl} alt={product.name} />
+                <h3>{product.name}</h3>
+                <p className="product-description">{product.description}</p>
+                <p className="product-price">${product.price}</p>
+                <p className="product-rating">⭐ {product.rating} ({product.reviews} reviews)</p>
+                <div className="product-actions">
+                  <Link to={`/products/${product.id}`} className="view-product-btn">
+                    View Product
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="scroll-indicators">
+          {featuredProducts.map((_, index) => (
+            <div
+              key={index}
+              className={`scroll-dot ${currentIndex === index ? 'active' : ''}`}
+              onClick={() => scrollToIndex(index)}
+            />
           ))}
         </div>
+
         <div className="view-all">
           <Link to="/shop" className="btn-primary">View All Products</Link>
         </div>
