@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    // Get saved user data from localStorage
-    const savedUser = JSON.parse(localStorage.getItem("finappUser"));
-
-    if (!savedUser) {
-      alert("No registered account found. Please sign up first.");
-      return;
-    }
-
-    if (username === savedUser.username && password === savedUser.password) {
-      alert(`Welcome back, ${username}!`);
-      navigate("/shop"); // redirect after login
-    } else {
-      alert("Invalid username or password.");
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        navigate("/");
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,12 +40,14 @@ const LoginPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} style={styles.form}>
+          {error && <div style={styles.errorMessage}>{error}</div>}
+          
           <div style={styles.inputContainer}>
             <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={styles.input}
               required
             />
@@ -61,18 +67,18 @@ const LoginPage = () => {
             <label style={styles.checkboxLabel}>
               <input type="checkbox" style={styles.checkbox} /> Remember me
             </label>
-            <a href="#" style={styles.forgotPassword}>
+            <button style={styles.forgotPassword}>
               Forgot password?
-            </a>
+            </button>
           </div>
 
-          <button type="submit" style={styles.loginButton}>
-            LOGIN
+          <button type="submit" style={styles.loginButton} disabled={loading}>
+            {loading ? "LOGGING IN..." : "LOGIN"}
           </button>
 
           <div style={styles.registerSection}>
             <p style={styles.noAccountText}>
-              Don’t have an account?
+              Don't have an account?
               <span
                 style={styles.registerLink}
                 onClick={() => navigate("/register")}
@@ -81,6 +87,12 @@ const LoginPage = () => {
                 Sign up
               </span>
             </p>
+          </div>
+          
+          <div style={styles.demoCredentials}>
+            <p style={styles.demoTitle}>Demo Credentials:</p>
+            <p style={styles.demoText}>User: user@finapp.com / password123</p>
+            <p style={styles.demoText}>Admin: admin@finapp.com / admin123</p>
           </div>
         </form>
 
@@ -254,6 +266,31 @@ const styles = {
     fontSize: "15px",
     cursor: "pointer",
     boxShadow: "0 4px 12px rgba(255,255,255,0.3)",
+  },
+  errorMessage: {
+    backgroundColor: "#ffebee",
+    color: "#c62828",
+    padding: "10px",
+    borderRadius: "5px",
+    marginBottom: "15px",
+    fontSize: "14px",
+    textAlign: "center",
+  },
+  demoCredentials: {
+    marginTop: "20px",
+    padding: "10px",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "5px",
+    fontSize: "12px",
+  },
+  demoTitle: {
+    fontWeight: "600",
+    marginBottom: "5px",
+    color: "#333",
+  },
+  demoText: {
+    margin: "2px 0",
+    color: "#666",
   },
 };
 

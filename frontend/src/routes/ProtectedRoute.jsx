@@ -1,14 +1,15 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-// Simple placeholder protection: checks localStorage token
-function ProtectedRoute({ component }) {
-  const location = useLocation();
-  const token = localStorage.getItem('token');
-  if (!token) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+function ProtectedRoute() {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <div>Loading...</div>;
   }
-  return component;
+  
+  return isAuthenticated() ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default ProtectedRoute;

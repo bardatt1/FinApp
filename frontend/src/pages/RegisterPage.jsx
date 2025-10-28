@@ -1,27 +1,52 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
 
-    // Save user data in localStorage
-    const userData = { username, email, password };
-    localStorage.setItem("finappUser", JSON.stringify(userData));
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long!");
+      return;
+    }
 
-    alert("Registration successful! Redirecting to login...");
-    navigate("/login");
+    setLoading(true);
+
+    try {
+      const result = await register({
+        firstName,
+        lastName,
+        email,
+        password
+      });
+      
+      if (result.success) {
+        navigate("/");
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      setError("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,13 +60,27 @@ const RegisterPage = () => {
         </div>
 
         <form onSubmit={handleSubmit} style={styles.form}>
-          {/* Username */}
+          {error && <div style={styles.errorMessage}>{error}</div>}
+          
+          {/* First Name */}
           <div style={styles.inputContainer}>
             <input
               type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              style={styles.input}
+              required
+            />
+          </div>
+
+          {/* Last Name */}
+          <div style={styles.inputContainer}>
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
               style={styles.input}
               required
             />
@@ -84,8 +123,8 @@ const RegisterPage = () => {
           </div>
 
           {/* Register Button */}
-          <button type="submit" style={styles.registerButton}>
-            REGISTER
+          <button type="submit" style={styles.registerButton} disabled={loading}>
+            {loading ? "REGISTERING..." : "REGISTER"}
           </button>
 
           {/* Login Redirect */}
@@ -261,6 +300,15 @@ const styles = {
     fontSize: "15px",
     cursor: "pointer",
     boxShadow: "0 4px 12px rgba(255,255,255,0.3)",
+  },
+  errorMessage: {
+    backgroundColor: "#ffebee",
+    color: "#c62828",
+    padding: "10px",
+    borderRadius: "5px",
+    marginBottom: "15px",
+    fontSize: "14px",
+    textAlign: "center",
   },
 };
 
