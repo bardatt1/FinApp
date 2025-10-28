@@ -1,12 +1,11 @@
-import React from 'react';
+import React from "react";
+import CarSummary from "../components/CarSummary";
 
-function CartPage() {
-  return (
-    <div>
-      <h2>Your Cart</h2>
-      <p>Items in your cart will appear here.</p>
-    </div>
-  );
-}
+const CartPage = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+    <CarSummary />
+  </div>
+);
 
 export default CartPage;
