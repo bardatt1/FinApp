@@ -1,2 +1,3 @@
-import { useCartContext } from "../context/CartContext";
-export const useCart = () => useCartContext();
+import { useCart } from '../context/CartContext';
+
+export default useCart;
