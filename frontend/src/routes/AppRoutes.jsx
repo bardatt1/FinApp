@@ -7,7 +7,7 @@ import CartPage from '../pages/CartPage';
 import CheckoutPage from '../pages/CheckoutPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
-import ProfilePage from '../pages/ProfilePage';
+import ProfilePage from "../pages/ProfilePage";
 import ProtectedRoute from './ProtectedRoute';
 
 function AppRoutes() {
@@ -20,7 +20,7 @@ function AppRoutes() {
       <Route path="/checkout" element={<ProtectedRoute component={<CheckoutPage />} />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/profile" element={<ProtectedRoute component={<ProfilePage />} />} />
+      <Route path="/profile" element={<ProfilePage />} />
     </Routes>
   );
 }
