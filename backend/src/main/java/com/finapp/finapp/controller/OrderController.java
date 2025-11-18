@@ -50,6 +50,16 @@ public class OrderController {
             return com.finapp.finapp.exception.GlobalExceptionHandler.errorResponseEntity(ex.getMessage(), org.springframework.http.HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<?>> cancel(@AuthenticationPrincipal UserDetails principal, @PathVariable Long id) {
+        try {
+            orderService.cancelOrder(principal.getUsername(), id);
+            return ResponseEntity.ok(ApiResponse.success("Order cancelled", null));
+        } catch (Exception ex) {
+            return com.finapp.finapp.exception.GlobalExceptionHandler.errorResponseEntity(ex.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 
 

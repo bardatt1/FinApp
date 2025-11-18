@@ -49,6 +49,20 @@ public class AuthController {
             return com.finapp.finapp.exception.GlobalExceptionHandler.errorResponseEntity(ex.getMessage(), org.springframework.http.HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse<?>> changePassword(@AuthenticationPrincipal UserDetails principal,
+                                                         @Valid @RequestBody ChangePasswordRequestDto request) {
+        try {
+            if (principal == null) {
+                throw new IllegalArgumentException("Unauthorized");
+            }
+            authService.changePassword(principal.getUsername(), request);
+            return ResponseEntity.ok(ApiResponse.success("Password changed successfully", null));
+        } catch (Exception ex) {
+            return com.finapp.finapp.exception.GlobalExceptionHandler.errorResponseEntity(ex.getMessage(), org.springframework.http.HttpStatus.BAD_REQUEST);
+        }
+    }
 }
 
 

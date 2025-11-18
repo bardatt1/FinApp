@@ -6,7 +6,7 @@ import { orderService } from '../services/api/orderService';
 import '../styles/checkout.css';
 
 function CheckoutPage() {
-  const { cartItems, getCartTotal, clearCart, loading: cartLoading } = useCart();
+  const { cartItems, getCartTotal, clearCart, refreshCart, loading: cartLoading } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
@@ -108,8 +108,18 @@ function CheckoutPage() {
     
     try {
       const order = await orderService.placeOrder(cartItems);
+      
+      // Clear cart from frontend state immediately
       clearCart();
-      // Redirect to order confirmation or profile
+      
+      // Refresh cart from backend to ensure it's cleared there too
+      // This ensures the cart count in navbar updates correctly
+      // Small delay to ensure backend has processed the cart clearing
+      setTimeout(() => {
+        refreshCart();
+      }, 200);
+      
+      // Redirect to profile page with order confirmation
       navigate(`/profile?order=${order.id}`);
     } catch (error) {
       console.error('Error placing order:', error);

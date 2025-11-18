@@ -9,6 +9,7 @@ public interface OrderService {
     OrderDto placeOrder(String email, OrderCreateRequestDto request);
     List<OrderDto> myOrders(String email);
     OrderDto get(String email, Long id);
+    void cancelOrder(String email, Long id);
 }
 
 

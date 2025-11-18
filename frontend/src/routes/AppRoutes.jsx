@@ -9,6 +9,7 @@ import CheckoutPage from '../pages/CheckoutPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ProfilePage from "../pages/ProfilePage";
+import ChangePasswordPage from '../pages/ChangePasswordPage';
 import AdminProductsPage from '../pages/AdminProductsPage';
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
@@ -24,7 +25,8 @@ function AppRoutes() {
       <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+      <Route path="/profile/change-password" element={<ProtectedRoute><ChangePasswordPage /></ProtectedRoute>} />
       <Route path="/admin/products" element={<AdminRoute><AdminProductsPage /></AdminRoute>} />
     </Routes>
   );

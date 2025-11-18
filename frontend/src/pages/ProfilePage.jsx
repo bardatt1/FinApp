@@ -1,270 +1,235 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { orderService } from '../services/api/orderService';
+import '../styles/profile.css';
 
-const ProfilePage = () => {
-  const { user, logout } = useAuth();
+function ProfilePage() {
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [cancellingOrderId, setCancellingOrderId] = useState(null);
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        const ordersData = await orderService.getMyOrders();
+        setOrders(Array.isArray(ordersData) ? ordersData : []);
+      } catch (err) {
+        console.error('Error fetching orders:', err);
+        setError(err.message || 'Failed to load orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [isAuthenticated, navigate]);
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate('/');
   };
 
-  const profile = {
-    firstName: user?.firstName || "John",
-    lastName: user?.lastName || "Doe",
-    email: user?.email || "john.doe@finapp.com",
-    role: user?.role || "Verified Shopper",
-    company: "FinApp Shopping",
-    phone: user?.phone || "+63 912 345 6789",
-    address: user?.address || "Cebu City, Philippines",
-    rating: 4.9,
-    reviews: 287,
-    status: "Active Member",
-    joined: "September 2024",
-    avatar:
-      "https://cdn-icons-png.flaticon.com/512/2922/2922510.png",
-    banner:
-      "https://images.unsplash.com/photo-1586201375761-83865001e17d?auto=format&fit=crop&w=1600&q=80",
-    bio: "Welcome to FinApp Shopping! John Doe is a passionate and loyal shopper who enjoys exploring great deals, discounts, and the latest tech and lifestyle products on FinApp. He values convenience, speed, and quality in every purchase.",
-    socials: {
-      facebook: "john.doe",
-      twitter: "@john_doe",
-      linkedin: "linkedin.com/in/johndoe",
-    },
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (e) {
+      return dateString;
+    }
   };
+
+  const getStatusColor = (status) => {
+    switch (status?.toUpperCase()) {
+      case 'PLACED':
+        return '#ffa500';
+      case 'SHIPPED':
+        return '#2196F3';
+      case 'DELIVERED':
+        return '#4CAF50';
+      case 'CANCELLED':
+        return '#f44336';
+      default:
+        return '#666';
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    // Show confirmation dialog
+    const confirmed = window.confirm(
+      '⚠️ WARNING: Are you sure you want to cancel this order?\n\n' +
+      'Once cancelled, you will not be able to retrieve this order. ' +
+      'This action cannot be undone.\n\n' +
+      'Do you want to proceed?'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setCancellingOrderId(orderId);
+      await orderService.cancelOrder(orderId);
+      
+      // Refresh orders list
+      const ordersData = await orderService.getMyOrders();
+      setOrders(Array.isArray(ordersData) ? ordersData : []);
+    } catch (err) {
+      console.error('Error cancelling order:', err);
+      alert(err.message || 'Failed to cancel order. Please try again.');
+    } finally {
+      setCancellingOrderId(null);
+    }
+  };
+
+  const canCancelOrder = (status) => {
+    return status?.toUpperCase() === 'PLACED';
+  };
+
+  if (!user) {
+    return (
+      <div className="profile-page">
+        <div className="container">
+          <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <p>Loading profile...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.page}>
-      {/* Banner Section */}
-      <div style={styles.bannerContainer}>
-        <img src={profile.banner} alt="Banner" style={styles.banner} />
-      </div>
+    <div className="profile-page">
+      <div className="container">
+        <h1 className="profile-title">My Profile</h1>
 
-      {/* Profile Header */}
-      <div style={styles.profileHeader}>
-        <img src={profile.avatar} alt="Avatar" style={styles.avatar} />
-        <div style={styles.profileInfo}>
-          <h2 style={styles.name}>
-            {profile.firstName} {profile.lastName}
-          </h2>
-          <p style={styles.role}>
-            {profile.role} at {profile.company}
-          </p>
-          <p style={styles.location}>📍 {profile.address}</p>
-          <div style={styles.socials}>
-            <span>🌐 {profile.socials.linkedin}</span>
-            <span>🐦 {profile.socials.twitter}</span>
-            <span>📘 {profile.socials.facebook}</span>
+        <div className="profile-container">
+          {/* User Details Section */}
+          <div className="profile-details-section">
+            <div className="profile-card">
+              <h2>Account Information</h2>
+              
+              <div className="profile-info-grid">
+                <div className="info-item">
+                  <label>Full Name</label>
+                  <div className="info-value">{user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'N/A'}</div>
+                </div>
+                
+                <div className="info-item">
+                  <label>Email</label>
+                  <div className="info-value">{user.email || 'N/A'}</div>
+                </div>
+                
+                <div className="info-item">
+                  <label>Role</label>
+                  <div className="info-value role-badge">{user.role || 'USER'}</div>
+                </div>
+              </div>
+
+              <div className="profile-actions">
+                <Link to="/profile/change-password" className="btn-change-password">
+                  Change Password
+                </Link>
+                <button onClick={handleLogout} className="btn-logout">
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Orders Section */}
+          <div className="profile-orders-section">
+            <div className="profile-card">
+              <h2>My Orders</h2>
+              
+              {loading ? (
+                <div className="orders-loading">
+                  <p>Loading orders...</p>
+                </div>
+              ) : error ? (
+                <div className="orders-error">
+                  <p>Error: {error}</p>
+                </div>
+              ) : orders.length === 0 ? (
+                <div className="orders-empty">
+                  <p>You haven't placed any orders yet.</p>
+                  <Link to="/shop" className="btn-shop-now">
+                    Start Shopping
+                  </Link>
+                </div>
+              ) : (
+                <div className="orders-list">
+                  {orders.map(order => (
+                    <div key={order.id} className="order-card">
+                      <div className="order-header">
+                        <div className="order-info">
+                          <h3>Order #{order.id}</h3>
+                          <p className="order-date">{formatDate(order.createdAt)}</p>
+                        </div>
+                        <div className="order-status-badge" style={{ backgroundColor: getStatusColor(order.status) }}>
+                          {order.status || 'PLACED'}
+                        </div>
+                      </div>
+                      
+                      <div className="order-items">
+                        {order.items && order.items.length > 0 ? (
+                          order.items.map((item, index) => (
+                            <div key={index} className="order-item">
+                              <div className="order-item-info">
+                                <span className="order-item-name">{item.name || 'Product'}</span>
+                                <span className="order-item-quantity">Qty: {item.quantity}</span>
+                              </div>
+                              <div className="order-item-price">
+                                ${((item.price || 0) * (item.quantity || 0)).toFixed(2)}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p>No items in this order</p>
+                        )}
+                      </div>
+                      
+                      <div className="order-footer">
+                        <div className="order-total">
+                          <span>Total:</span>
+                          <span className="total-amount">${(order.total || 0).toFixed(2)}</span>
+                        </div>
+                        {canCancelOrder(order.status) && (
+                          <button
+                            onClick={() => handleCancelOrder(order.id)}
+                            disabled={cancellingOrderId === order.id}
+                            className="btn-cancel-order"
+                          >
+                            {cancellingOrderId === order.id ? 'Cancelling...' : 'Cancel Order'}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <div style={styles.actionButtons}>
-          <button
-            onClick={() => navigate("/shop")}
-            style={{ ...styles.button, backgroundColor: "#a42c2c", color: "#fff" }}
-          >
-            Go to Shop
-          </button>
-          <button
-            onClick={handleLogout}
-            style={{
-              ...styles.button,
-              backgroundColor: "#fff",
-              border: "2px solid #a42c2c",
-              color: "#a42c2c",
-            }}
-          >
-            Log Out
-          </button>
-        </div>
-      </div>
-
-      {/* Info Section */}
-      <div style={styles.infoSection}>
-        <div style={styles.leftColumn}>
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>📞 Contact Information</h3>
-            <p>Email: {profile.email}</p>
-            <p>Phone: {profile.phone}</p>
-            <p>Status: <b>{profile.status}</b></p>
-            <p>Member since: {profile.joined}</p>
-          </div>
-
-          <div style={styles.card}>
-            <h3 style={styles.cardTitle}>⭐ Ratings & Reviews</h3>
-            <h2 style={{ color: "#f4b400", marginBottom: "5px" }}>
-              {profile.rating} / 5
-            </h2>
-            <p>Based on {profile.reviews} reviews</p>
-            <p style={{ marginTop: "10px", fontStyle: "italic" }}>
-              “John is a trusted customer who always leaves helpful feedback and
-              insightful product reviews.”
-            </p>
-          </div>
-        </div>
-
-        <div style={styles.rightColumn}>
-          <div style={styles.cardLarge}>
-            <h3 style={styles.cardTitle}>🛍️ About Me</h3>
-            <p>{profile.bio}</p>
-            <p style={{ marginTop: "10px" }}>
-              John is part of FinApp’s premium shopper community, frequently
-              exploring exclusive items, gadgets, and lifestyle products. He
-              enjoys taking advantage of seasonal sales and promoting trusted
-              brands through his reviews.
-            </p>
-          </div>
-
-          <div style={styles.cardLarge}>
-            <h3 style={styles.cardTitle}>🧾 Recent Activity</h3>
-            <ul style={styles.list}>
-              <li>🛒 Purchased “Apple AirPods Pro” — Oct 26, 2025</li>
-              <li>💬 Left a 5-star review on “Nike Running Shoes”</li>
-              <li>❤️ Added “Samsung Galaxy Watch 6” to wishlist</li>
-              <li>📦 Order #FA12345 delivered successfully</li>
-              <li>🏆 Earned “Top Buyer of the Month” badge</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer Section */}
-      <div style={styles.footer}>
-        <p>
-          © 2025 FinApp Shopping — Profile of <b>{profile.firstName} {profile.lastName}</b>
-        </p>
       </div>
     </div>
   );
-};
-
-// INLINE STYLES
-const styles = {
-  page: {
-    fontFamily: "Poppins, sans-serif",
-    backgroundColor: "#f5f6fa",
-    minHeight: "100vh",
-    color: "#333",
-  },
-  bannerContainer: {
-    width: "100%",
-    height: "240px",
-    overflow: "hidden",
-  },
-  banner: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    filter: "brightness(0.9)",
-  },
-  profileHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-    padding: "20px 40px",
-    margin: "0 auto",
-    marginTop: "-70px",
-    width: "90%",
-    maxWidth: "1100px",
-  },
-  avatar: {
-    width: "130px",
-    height: "130px",
-    borderRadius: "50%",
-    border: "5px solid white",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  },
-  profileInfo: {
-    flex: 1,
-    marginLeft: "30px",
-  },
-  name: {
-    fontSize: "1.8rem",
-    fontWeight: "700",
-    marginBottom: "5px",
-  },
-  role: {
-    color: "#a42c2c",
-    fontWeight: "600",
-    marginBottom: "5px",
-  },
-  location: {
-    color: "#777",
-    fontSize: "0.9rem",
-    marginBottom: "10px",
-  },
-  socials: {
-    display: "flex",
-    gap: "15px",
-    fontSize: "0.9rem",
-    color: "#555",
-  },
-  actionButtons: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  button: {
-    padding: "10px 20px",
-    borderRadius: "25px",
-    fontWeight: "600",
-    cursor: "pointer",
-    fontSize: "15px",
-    transition: "0.3s",
-  },
-  infoSection: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "20px",
-    margin: "30px auto",
-    width: "90%",
-    maxWidth: "1100px",
-  },
-  leftColumn: {
-    flex: "1 1 300px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  rightColumn: {
-    flex: "2 1 600px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
-    padding: "20px",
-  },
-  cardLarge: {
-    backgroundColor: "#fff",
-    borderRadius: "12px",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
-    padding: "25px",
-  },
-  cardTitle: {
-    fontSize: "1.1rem",
-    fontWeight: "600",
-    color: "#a42c2c",
-    marginBottom: "10px",
-  },
-  list: {
-    listStyleType: "none",
-    paddingLeft: "0",
-    lineHeight: "1.8",
-  },
-  footer: {
-    textAlign: "center",
-    padding: "20px 0",
-    color: "#777",
-    fontSize: "0.85rem",
-  },
-};
+}
 
 export default ProfilePage;

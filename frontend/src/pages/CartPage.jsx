@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 function CartPage() {
   const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart, loading, refreshCart } = useCart();
   const [updating, setUpdating] = useState(null);
 
-  // Refresh cart when page loads
+  // Force refresh cart when cart page loads
+  const { user } = useAuth();
+  
   useEffect(() => {
-    refreshCart();
+    // Always refresh cart when cart page loads to ensure it's up to date
+    if (user?.id && localStorage.getItem('token')) {
+      console.log('CartPage: Force refreshing cart on mount');
+      const timer = setTimeout(() => {
+        refreshCart();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 

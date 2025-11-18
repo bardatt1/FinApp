@@ -76,6 +76,22 @@ public class AuthServiceImpl implements AuthService {
         Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         return new UserDto(user.getId(), user.getFullName(), user.getEmail(), roles);
     }
+
+    @Override
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequestDto request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Verify current password
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
 }
 
 

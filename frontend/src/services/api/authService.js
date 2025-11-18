@@ -62,6 +62,15 @@ export const authService = {
         });
         return handleResponse(res);
     },
+
+    async changePassword(passwordData) {
+        const res = await fetch(`${BASE}/change-password`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(passwordData),
+        });
+        return handleResponse(res);
+    },
 };
 
 export default authService;

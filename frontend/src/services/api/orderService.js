@@ -60,6 +60,14 @@ export const orderService = {
         });
         return handleResponse(res);
     },
+
+    async cancelOrder(id) {
+        const res = await fetch(`${BASE}/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
 };
 
 export default orderService;

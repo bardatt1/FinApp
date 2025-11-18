@@ -27,6 +27,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private com.finapp.finapp.repository.CartRepository cartRepository;
+
     @Override
     @Transactional
     public OrderDto placeOrder(String email, OrderCreateRequestDto request) {
@@ -49,7 +52,15 @@ public class OrderServiceImpl implements OrderService {
             total += product.getPrice() * item.quantity();
         }
         order.setTotal(total);
-        return toDto(orderRepository.save(order));
+        OrderDto orderDto = toDto(orderRepository.save(order));
+        
+        // Clear the user's cart after order is placed
+        cartRepository.findByUserId(user.getId()).ifPresent(cart -> {
+            cart.getItems().clear();
+            cartRepository.save(cart);
+        });
+        
+        return orderDto;
     }
 
     @Override
@@ -66,6 +77,27 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalArgumentException("Forbidden");
         }
         return toDto(order);
+    }
+
+    @Override
+    @Transactional
+    public void cancelOrder(String email, Long id) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        
+        // Verify order belongs to user
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Forbidden");
+        }
+        
+        // Only allow cancellation of orders that are PLACED
+        if (!"PLACED".equalsIgnoreCase(order.getStatus())) {
+            throw new IllegalArgumentException("Only PLACED orders can be cancelled");
+        }
+        
+        // Update order status to CANCELLED
+        order.setStatus("CANCELLED");
+        orderRepository.save(order);
     }
 
     private OrderDto toDto(Order order) {

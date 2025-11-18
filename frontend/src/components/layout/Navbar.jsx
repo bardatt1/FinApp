@@ -10,11 +10,15 @@ function Navbar() {
 
   // Refresh cart when user is authenticated to ensure count is accurate
   useEffect(() => {
-    if (isAuthenticated() && user?.id) {
-      refreshCart();
+    if (user?.id && localStorage.getItem('token')) {
+      console.log('Navbar: Refreshing cart count');
+      const timer = setTimeout(() => {
+        refreshCart();
+      }, 200);
+      return () => clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]); // Only refresh when user changes
+  }, [user?.id]); // Refresh when user changes
 
   const handleLogout = () => {
     logout();
