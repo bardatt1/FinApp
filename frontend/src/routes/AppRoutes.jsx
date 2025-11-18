@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import LandingPage from '../pages/LandingPage';
 import HomePage from '../pages/HomePage';
 import ShopPage from '../pages/ShopPage';
 import ProductPage from '../pages/ProductPage';
@@ -13,7 +14,8 @@ import ProtectedRoute from './ProtectedRoute';
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/home" element={<HomePage />} />
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/product/:id" element={<ProductPage />} />
       <Route path="/cart" element={<CartPage />} />
