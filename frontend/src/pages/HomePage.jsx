@@ -2,10 +2,13 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from '../components/ui/Banner';
 import CategoryCard from '../components/ui/CategoryCard';
-import { mockCategories, mockProducts } from '../data/mockData';
+import { mockCategories } from '../data/mockData';
+import useProducts from '../hooks/useProducts';
+import ProductGrid from '../components/product/ProductGrid';
 
 function HomePage() {
-  const featuredProducts = mockProducts.slice(0, 6);
+  const { products, loading, error } = useProducts();
+  const featuredProducts = (products || []).slice(0, 8);
   const scrollRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -22,9 +25,10 @@ function HomePage() {
 
   return (
     <main className="page home-page">
-      <header className="hero">
+      <header className="home-hero">
         <h1>Welcome to FinApp Shop</h1>
-        <p>Find the best products curated for you.</p>
+        <p>Discover products curated for you</p>
+        <Link to="/shop" className="btn">Shop all</Link>
       </header>
 
       <Banner />
@@ -76,6 +80,11 @@ function HomePage() {
         <div className="view-all">
           <Link to="/shop" className="btn-primary">View All Products</Link>
         </div>
+      </section>
+
+      <section className="home-featured">
+        <h2>Featured products</h2>
+        <ProductGrid products={featuredProducts} loading={loading} error={error} />
       </section>
     </main>
   );
