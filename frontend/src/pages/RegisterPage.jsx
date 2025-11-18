@@ -17,11 +17,27 @@ const RegisterPage = () => {
     e.preventDefault();
     setError("");
 
+    // Client-side validation
+    if (!firstName.trim()) {
+      setError("First name is required");
+      return;
+    }
+    if (!lastName.trim()) {
+      setError("Last name is required");
+      return;
+    }
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-
     if (password.length < 6) {
       setError("Password must be at least 6 characters long!");
       return;
@@ -31,19 +47,20 @@ const RegisterPage = () => {
 
     try {
       const result = await register({
-        firstName,
-        lastName,
-        email,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
         password
       });
       
       if (result.success) {
-        navigate("/");
+        // Redirect to shop page after successful registration
+        navigate("/shop");
       } else {
-        setError(result.message);
+        setError(result.message || "Registration failed. Please try again.");
       }
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -123,7 +140,15 @@ const RegisterPage = () => {
           </div>
 
           {/* Register Button */}
-          <button type="submit" style={styles.registerButton} disabled={loading}>
+          <button 
+            type="submit" 
+            style={{
+              ...styles.registerButton,
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }} 
+            disabled={loading}
+          >
             {loading ? "REGISTERING..." : "REGISTER"}
           </button>
 

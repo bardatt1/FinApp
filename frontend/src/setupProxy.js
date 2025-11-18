@@ -6,6 +6,15 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: 'http://localhost:8080',
       changeOrigin: true,
+      secure: false,
+      logLevel: 'debug',
+      onProxyReq: (proxyReq, req, res) => {
+        // Increase timeout for large requests (base64 images)
+        proxyReq.setTimeout(60000); // 60 seconds
+      },
+      onError: (err, req, res) => {
+        console.error('Proxy error:', err);
+      }
     })
   );
 };

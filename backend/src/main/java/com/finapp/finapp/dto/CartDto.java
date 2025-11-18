@@ -12,6 +12,7 @@ public record CartDto(
             String name,
             String category,
             Double price,
+            String imageUrl,
             int quantity,
             Double lineTotal
     ) {}

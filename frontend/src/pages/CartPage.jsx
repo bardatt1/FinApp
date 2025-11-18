@@ -1,9 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart, loading, refreshCart } = useCart();
+  const [updating, setUpdating] = useState(null);
+
+  // Refresh cart when page loads
+  useEffect(() => {
+    refreshCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
+
+  if (loading && cartItems.length === 0) {
+    return (
+      <div className="cart-page">
+        <div className="container">
+          <h1>Your Cart</h1>
+          <div style={{ textAlign: 'center', padding: '3rem' }}>
+            <p>Loading cart...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -25,39 +45,75 @@ function CartPage() {
         <h1>Your Cart</h1>
         
         <div className="cart-items">
-          {cartItems.map(item => (
-            <div key={item.product.id} className="cart-item">
-              <img src={item.product.imageUrl} alt={item.product.name} />
-              <div className="item-details">
-                <h3>{item.product.name}</h3>
-                <p className="item-price">${item.product.price}</p>
-                <div className="quantity-controls">
+          {cartItems.map(item => {
+            const isUpdating = updating === item.product.id;
+            const handleUpdateQuantity = async (newQuantity) => {
+              setUpdating(item.product.id);
+              try {
+                await updateQuantity(item.product.id, newQuantity);
+              } catch (error) {
+                console.error('Failed to update quantity:', error);
+              } finally {
+                setUpdating(null);
+              }
+            };
+
+            const handleRemove = async () => {
+              setUpdating(item.product.id);
+              try {
+                await removeFromCart(item.product.id);
+              } catch (error) {
+                console.error('Failed to remove item:', error);
+              } finally {
+                setUpdating(null);
+              }
+            };
+
+            return (
+              <div key={item.product.id} className="cart-item">
+                <Link to={`/product/${item.product.id}`}>
+                  <img 
+                    src={item.product.imageUrl || item.product.image || '/placeholder.svg'} 
+                    alt={item.product.name}
+                    onError={(e) => {
+                      e.target.src = '/placeholder.svg';
+                    }}
+                  />
+                </Link>
+                <div className="item-details">
+                  <Link to={`/product/${item.product.id}`}>
+                    <h3>{item.product.name}</h3>
+                  </Link>
+                  <p className="item-price">${(item.product.price || 0).toFixed(2)}</p>
+                  <div className="quantity-controls">
+                    <button 
+                      onClick={() => handleUpdateQuantity(item.quantity - 1)}
+                      disabled={item.quantity <= 1 || isUpdating}
+                    >
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button 
+                      onClick={() => handleUpdateQuantity(item.quantity + 1)}
+                      disabled={isUpdating}
+                    >
+                      +
+                    </button>
+                  </div>
                   <button 
-                    onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                    disabled={item.quantity <= 1}
+                    onClick={handleRemove}
+                    className="remove-btn"
+                    disabled={isUpdating}
                   >
-                    -
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button 
-                    onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                    disabled={item.quantity >= item.product.stock}
-                  >
-                    +
+                    {isUpdating ? '...' : 'Remove'}
                   </button>
                 </div>
-                <button 
-                  onClick={() => removeFromCart(item.product.id)}
-                  className="remove-btn"
-                >
-                  Remove
-                </button>
+                <div className="item-total">
+                  ${((item.product.price || 0) * item.quantity).toFixed(2)}
+                </div>
               </div>
-              <div className="item-total">
-                ${(item.product.price * item.quantity).toFixed(2)}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="cart-summary">

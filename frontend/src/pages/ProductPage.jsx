@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useProducts from '../hooks/useProducts';
+import { productService } from '../services/api/productService';
 import ProductDetail from '../components/product/ProductDetail';
 
 export default function ProductPage() {
     const { id } = useParams();
-    const { getProduct } = useProducts();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,14 +12,38 @@ export default function ProductPage() {
     useEffect(() => {
         let mounted = true;
         setLoading(true);
-        getProduct(id)
-            .then((p) => { if (mounted) setProduct(p); })
-            .catch((e) => { if (mounted) setError(e.message || 'Failed to load product'); })
-            .finally(() => { if (mounted) setLoading(false); });
+        productService.getById(id)
+            .then((p) => { 
+                if (mounted) {
+                    setProduct({
+                        ...p,
+                        image: p.imageUrl || p.image,
+                        inStock: true
+                    });
+                }
+            })
+            .catch((e) => { 
+                if (mounted) setError(e.message || 'Failed to load product'); 
+            })
+            .finally(() => { 
+                if (mounted) setLoading(false); 
+            });
         return () => { mounted = false; };
-    }, [id, getProduct]);
+    }, [id]);
 
-    if (loading) return <div>Loading product...</div>;
-    if (error) return <div className="error">Error: {error}</div>;
+    if (loading) {
+        return (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+                <p>Loading product...</p>
+            </div>
+        );
+    }
+    if (error) {
+        return (
+            <div style={{ textAlign: 'center', padding: '3rem', color: '#c62828' }}>
+                <p>Error: {error}</p>
+            </div>
+        );
+    }
     return <ProductDetail product={product} />;
 }

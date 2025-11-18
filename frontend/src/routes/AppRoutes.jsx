@@ -9,7 +9,9 @@ import CheckoutPage from '../pages/CheckoutPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import ProfilePage from "../pages/ProfilePage";
+import AdminProductsPage from '../pages/AdminProductsPage';
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
 
 function AppRoutes() {
   return (
@@ -19,10 +21,11 @@ function AppRoutes() {
       <Route path="/shop" element={<ShopPage />} />
       <Route path="/product/:id" element={<ProductPage />} />
       <Route path="/cart" element={<CartPage />} />
-      <Route path="/checkout" element={<ProtectedRoute component={<CheckoutPage />} />} />
+      <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/admin/products" element={<AdminRoute><AdminProductsPage /></AdminRoute>} />
     </Routes>
   );
 }

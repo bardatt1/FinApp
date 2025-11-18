@@ -1,4 +1,4 @@
-const BASE = '/api/orders';
+const BASE = '/api/cart';
 
 function getAuthHeaders() {
     const token = localStorage.getItem('token');
@@ -31,35 +31,40 @@ async function handleResponse(res) {
     return data.data || data;
 }
 
-export const orderService = {
-    async placeOrder(items) {
-        // Transform cart items to order items format
-        const orderItems = items.map(item => ({
-            productId: item.product.id,
-            quantity: item.quantity
-        }));
-        
+export const cartService = {
+    async getCart() {
         const res = await fetch(BASE, {
+            headers: getAuthHeaders(),
+        });
+        return handleResponse(res);
+    },
+
+    async addItem(productId, quantity = 1) {
+        const res = await fetch(`${BASE}/add`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            body: JSON.stringify({ items: orderItems }),
+            body: JSON.stringify({ productId, quantity }),
         });
         return handleResponse(res);
     },
 
-    async getMyOrders() {
-        const res = await fetch(BASE, {
+    async updateItem(productId, quantity) {
+        const res = await fetch(`${BASE}/update`, {
+            method: 'PUT',
             headers: getAuthHeaders(),
+            body: JSON.stringify({ productId, quantity }),
         });
         return handleResponse(res);
     },
 
-    async getOrderById(id) {
-        const res = await fetch(`${BASE}/${id}`, {
+    async removeItem(productId) {
+        const res = await fetch(`${BASE}/remove/${productId}`, {
+            method: 'DELETE',
             headers: getAuthHeaders(),
         });
         return handleResponse(res);
     },
 };
 
-export default orderService;
+export default cartService;
+

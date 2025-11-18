@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
 function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
-  const { getCartItemsCount } = useCart();
+  const { getCartItemsCount, refreshCart } = useCart();
   const navigate = useNavigate();
+
+  // Refresh cart when user is authenticated to ensure count is accurate
+  useEffect(() => {
+    if (isAuthenticated() && user?.id) {
+      refreshCart();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // Only refresh when user changes
 
   const handleLogout = () => {
     logout();
@@ -16,7 +24,15 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="container navbar-inner">
-        <div className="brand"><Link to="/">FinApp</Link></div>
+        <Link to="/" className="logo">
+          <img 
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo%201-Mh6COknUw9YylXJOr3ozA7DnM2p0Sf.png" 
+            alt="FinApp Logo" 
+            width={40}
+            height={40}
+          />
+          <span>FinApp</span>
+        </Link>
         <div className="nav-links">
           <Link to="/shop">Shop</Link>
           
@@ -26,6 +42,9 @@ function Navbar() {
                 Cart ({getCartItemsCount()})
               </Link>
               <Link to="/profile">Profile</Link>
+              {user?.role === 'ADMIN' && (
+                <Link to="/admin/products">Admin</Link>
+              )}
               <span className="user-info">
                 Welcome, {user?.firstName}!
               </span>

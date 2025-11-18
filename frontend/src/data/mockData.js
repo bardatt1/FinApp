@@ -22,96 +22,114 @@ export const mockUsers = [
 export const mockCategories = [
   {
     id: 1,
-    name: 'Electronics',
-    description: 'Latest electronic gadgets and devices',
-    imageUrl: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400'
+    name: 'tshirts',
+    description: 'Premium t-shirts with FinApp branding',
+    imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400'
   },
   {
     id: 2,
-    name: 'Clothing',
-    description: 'Fashion and apparel for all seasons',
-    imageUrl: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400'
+    name: 'hoodies',
+    description: 'Comfortable hoodies for everyday wear',
+    imageUrl: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400'
   },
   {
     id: 3,
-    name: 'Books',
-    description: 'Books and educational materials',
-    imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400'
+    name: 'sweatshirts',
+    description: 'Cozy sweatshirts with classic style',
+    imageUrl: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400'
   },
   {
     id: 4,
-    name: 'Sports',
-    description: 'Sports equipment and fitness gear',
-    imageUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400'
+    name: 'caps',
+    description: 'Stylish baseball caps',
+    imageUrl: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400'
+  },
+  {
+    id: 5,
+    name: 'sweatpants',
+    description: 'Comfortable sweatpants for active lifestyle',
+    imageUrl: 'https://images.unsplash.com/photo-1624378515193-9bb8baf9f969?w=400'
   }
 ];
 
 export const mockProducts = [
   {
     id: 1,
-    name: 'Wireless Headphones',
-    description: 'High-quality wireless headphones with noise cancellation',
-    price: 199.99,
-    stock: 50,
+    name: 'Classic T-Shirt - Black',
+    description: 'Premium black t-shirt featuring the iconic FinApp FA logo in vibrant red. Made from soft, comfortable cotton blend.',
+    price: 29.99,
+    stock: 100,
     category: mockCategories[0],
-    imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
-    rating: 4.5,
-    reviews: 128
+    imageUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tshirt-D6PkbtXXbeieR1Ws69tEfY3t0iayPy.png',
+    image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/tshirt-D6PkbtXXbeieR1Ws69tEfY3t0iayPy.png',
+    inStock: true,
+    rating: 4.8,
+    reviews: 124
   },
   {
     id: 2,
-    name: 'Smartphone',
-    description: 'Latest smartphone with advanced features',
-    price: 899.99,
-    stock: 25,
+    name: 'Classic T-Shirt - White',
+    description: 'Crisp white t-shirt with the bold FinApp FA logo in red. Perfect for everyday casual wear.',
+    price: 29.99,
+    stock: 95,
     category: mockCategories[0],
-    imageUrl: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400',
-    rating: 4.8,
-    reviews: 256
+    imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
+    inStock: true,
+    rating: 4.7,
+    reviews: 98
   },
   {
     id: 3,
-    name: 'Cotton T-Shirt',
-    description: 'Comfortable cotton t-shirt in various colors',
-    price: 29.99,
-    stock: 100,
-    category: mockCategories[1],
-    imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400',
-    rating: 4.2,
-    reviews: 89
-  },
-  {
-    id: 4,
-    name: 'Programming Book',
-    description: 'Complete guide to modern programming',
-    price: 49.99,
+    name: 'Premium Hoodie - Black',
+    description: 'Comfortable black hoodie with the FinApp FA logo embroidered in red. Soft fleece lining for ultimate comfort.',
+    price: 59.99,
     stock: 75,
-    category: mockCategories[2],
-    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
-    rating: 4.7,
+    category: mockCategories[1],
+    imageUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hoodie-fSia0nJ3SoXAUcfjR28vg9Th0MNsfe.png',
+    image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/hoodie-fSia0nJ3SoXAUcfjR28vg9Th0MNsfe.png',
+    inStock: true,
+    rating: 4.9,
     reviews: 156
   },
   {
+    id: 4,
+    name: 'Cozy Sweatshirt - White',
+    description: 'Classic white sweatshirt featuring the FinApp FA logo in burgundy red. Perfect for layering or wearing alone.',
+    price: 49.99,
+    stock: 80,
+    category: mockCategories[2],
+    imageUrl: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400',
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400',
+    inStock: true,
+    rating: 4.7,
+    reviews: 87
+  },
+  {
     id: 5,
-    name: 'Running Shoes',
-    description: 'Comfortable running shoes for all terrains',
-    price: 129.99,
-    stock: 40,
+    name: 'Classic Cap - Black',
+    description: 'Stylish black baseball cap with embroidered FinApp FA logo in red. Adjustable strap for perfect fit.',
+    price: 24.99,
+    stock: 120,
     category: mockCategories[3],
-    imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400',
+    imageUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cap-HrbhifBMr8y1MQe40aXZe2AJczoR1f.png',
+    image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/cap-HrbhifBMr8y1MQe40aXZe2AJczoR1f.png',
+    inStock: true,
     rating: 4.6,
-    reviews: 203
+    reviews: 62
   },
   {
     id: 6,
-    name: 'Yoga Mat',
-    description: 'Non-slip yoga mat for home workouts',
-    price: 39.99,
-    stock: 60,
-    category: mockCategories[3],
-    imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400',
-    rating: 4.4,
-    reviews: 92
+    name: 'Sweatpants - Grey',
+    description: 'Comfortable grey sweatpants with the FinApp FA logo on the thigh. Perfect for active lifestyle or lounging.',
+    price: 54.99,
+    stock: 65,
+    category: mockCategories[4],
+    imageUrl: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sweatpant2-eUvhG88qGWGnr6ISTKnIrguwTVv38G.png',
+    image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sweatpant2-eUvhG88qGWGnr6ISTKnIrguwTVv38G.png',
+    inStock: true,
+    rating: 4.8,
+    reviews: 112
   }
 ];
 
@@ -121,9 +139,9 @@ export const mockOrders = [
     userId: 1,
     items: [
       { product: mockProducts[0], quantity: 1 },
-      { product: mockProducts[2], quantity: 2 }
+      { product: mockProducts[2], quantity: 1 }
     ],
-    totalAmount: 259.97,
+    totalAmount: 89.98,
     status: 'DELIVERED',
     orderDate: '2024-01-15',
     shippingAddress: {
@@ -138,9 +156,10 @@ export const mockOrders = [
     id: 2,
     userId: 1,
     items: [
-      { product: mockProducts[1], quantity: 1 }
+      { product: mockProducts[3], quantity: 1 },
+      { product: mockProducts[5], quantity: 1 }
     ],
-    totalAmount: 899.99,
+    totalAmount: 104.98,
     status: 'SHIPPED',
     orderDate: '2024-01-20',
     shippingAddress: {

@@ -1,16 +1,54 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Banner from '../components/ui/Banner';
 import CategoryCard from '../components/ui/CategoryCard';
-import { mockCategories } from '../data/mockData';
-import useProducts from '../hooks/useProducts';
+import { productService } from '../services/api/productService';
 import ProductGrid from '../components/product/ProductGrid';
 
 function HomePage() {
-  const { products, loading, error } = useProducts();
-  const featuredProducts = (products || []).slice(0, 8);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const scrollRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await productService.getAll();
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch products');
+        console.error('Error fetching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const categorySet = new Set();
+    products.forEach(p => {
+      if (p.category) categorySet.add(p.category);
+    });
+    return Array.from(categorySet).map((cat, idx) => ({
+      id: idx + 1,
+      name: cat,
+      description: `${cat} collection`,
+      imageUrl: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400'
+    }));
+  }, [products]);
+
+  const featuredProducts = products.slice(0, 8).map(product => ({
+    ...product,
+    image: product.imageUrl || product.image,
+    inStock: true,
+    rating: 4.5, // Default rating since API doesn't provide it
+    reviews: 0
+  }));
 
   const scrollToIndex = (index) => {
     if (scrollRef.current) {
@@ -33,17 +71,19 @@ function HomePage() {
 
       <Banner />
       
-      <div style={{ marginTop: 24 }}>
-        <div className="category-grid">
-          {mockCategories.map(category => (
-            <CategoryCard
-              key={category.id}
-              name={category.name}
-              imageUrl={category.imageUrl}
-            />
-          ))}
+      {categories.length > 0 && (
+        <div style={{ marginTop: 24 }}>
+          <div className="category-grid">
+            {categories.map(category => (
+              <CategoryCard
+                key={category.id}
+                name={category.name}
+                imageUrl={category.imageUrl}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <section className="featured-products">
         <h2>Featured Products</h2>
@@ -52,13 +92,15 @@ function HomePage() {
           <div className="products-scroll" ref={scrollRef}>
             {featuredProducts.map(product => (
               <div key={product.id} className="product-card">
-                <img src={product.imageUrl} alt={product.name} />
+                <img src={product.imageUrl || product.image || '/placeholder.svg'} alt={product.name} />
                 <h3>{product.name}</h3>
                 <p className="product-description">{product.description}</p>
-                <p className="product-price">${product.price}</p>
-                <p className="product-rating">⭐ {product.rating} ({product.reviews} reviews)</p>
+                <p className="product-price">${(product.price || 0).toFixed(2)}</p>
+                {product.rating && (
+                  <p className="product-rating">⭐ {product.rating} ({product.reviews || 0} reviews)</p>
+                )}
                 <div className="product-actions">
-                  <Link to={`/products/${product.id}`} className="view-product-btn">
+                  <Link to={`/product/${product.id}`} className="view-product-btn">
                     View Product
                   </Link>
                 </div>

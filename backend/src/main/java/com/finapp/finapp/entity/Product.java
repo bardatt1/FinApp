@@ -24,6 +24,8 @@ public class Product {
     @Positive
     private Double price;
 
+    @Column(columnDefinition = "LONGTEXT")
+    @Lob
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)

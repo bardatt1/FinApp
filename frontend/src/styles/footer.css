@@ -1,0 +1,35 @@
+:root {
+  --neutral-dark: #1a1a1a;
+}
+
+.footer {
+  background: var(--neutral-dark);
+  color: white;
+  padding: 4rem;
+  margin-top: 6rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  text-align: center;
+  color: #999;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1rem;
+    margin-top: 3rem;
+  }
+
+  .footer-bottom {
+    padding-top: 1.5rem;
+  }
+}
+

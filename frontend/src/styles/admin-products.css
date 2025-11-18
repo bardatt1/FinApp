@@ -1,0 +1,255 @@
+:root {
+  --primary-color: #a74444;
+  --primary-dark: #8b3636;
+  --background: #fafafa;
+  --surface: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --border-color: #e0e0e0;
+  --spacing-unit: 8px;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+}
+
+.admin-products-page .admin-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.admin-create-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-create-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(167, 68, 68, 0.3);
+}
+
+.admin-error-banner {
+  background: #fee;
+  border: 1px solid var(--error-color);
+  color: var(--error-color);
+  padding: calc(var(--spacing-unit) * 2);
+  margin: calc(var(--spacing-unit) * 2) auto;
+  max-width: 1400px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-error-banner button {
+  background: var(--error-color);
+  color: white;
+  border: none;
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 2);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.admin-loading,
+.admin-empty-state {
+  text-align: center;
+  padding: calc(var(--spacing-unit) * 8);
+  color: var(--text-secondary);
+}
+
+.admin-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 4);
+}
+
+.admin-product-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.admin-product-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+  transform: translateY(-4px);
+}
+
+.admin-product-image {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+.admin-product-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-product-info {
+  padding: calc(var(--spacing-unit) * 1.5);
+}
+
+.admin-product-info h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 calc(var(--spacing-unit) * 0.5) 0;
+}
+
+.admin-product-category {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: 0 0 calc(var(--spacing-unit) * 0.5) 0;
+  text-transform: capitalize;
+}
+
+.admin-product-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0 0 calc(var(--spacing-unit) * 1) 0;
+}
+
+.admin-product-actions {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 1);
+}
+
+.admin-edit-btn,
+.admin-delete-btn {
+  flex: 1;
+  padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-edit-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.admin-edit-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.admin-delete-btn {
+  background-color: transparent;
+  border: 2px solid var(--error-color);
+  color: var(--error-color);
+}
+
+.admin-delete-btn:hover {
+  background-color: var(--error-color);
+  color: white;
+}
+
+/* Delete Confirmation Modal */
+.admin-delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.admin-delete-modal {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: calc(var(--spacing-unit) * 4);
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.admin-delete-modal h3 {
+  margin: 0 0 calc(var(--spacing-unit) * 1) 0;
+  color: var(--text-primary);
+}
+
+.admin-delete-modal p {
+  color: var(--text-secondary);
+  margin: 0 0 calc(var(--spacing-unit) * 3) 0;
+}
+
+.admin-delete-actions {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 2);
+  justify-content: flex-end;
+}
+
+.admin-delete-cancel,
+.admin-delete-confirm {
+  padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-delete-cancel {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.admin-delete-cancel:hover {
+  background: var(--background);
+}
+
+.admin-delete-confirm {
+  background: var(--error-color);
+  color: white;
+}
+
+.admin-delete-confirm:hover {
+  background: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-products-page .admin-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: calc(var(--spacing-unit) * 2);
+  }
+
+  .admin-create-btn {
+    width: 100%;
+  }
+
+  .admin-product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+

@@ -1,4 +1,4 @@
-const BASE = '/api/orders';
+const BASE = '/api/auth';
 
 function getAuthHeaders() {
     const token = localStorage.getItem('token');
@@ -31,35 +31,38 @@ async function handleResponse(res) {
     return data.data || data;
 }
 
-export const orderService = {
-    async placeOrder(items) {
-        // Transform cart items to order items format
-        const orderItems = items.map(item => ({
-            productId: item.product.id,
-            quantity: item.quantity
-        }));
-        
-        const res = await fetch(BASE, {
+export const authService = {
+    async register(userData) {
+        const res = await fetch(`${BASE}/register`, {
             method: 'POST',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ items: orderItems }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                fullName: `${userData.firstName} ${userData.lastName}`,
+                email: userData.email,
+                password: userData.password
+            }),
         });
-        return handleResponse(res);
+        const response = await handleResponse(res);
+        return response;
     },
 
-    async getMyOrders() {
-        const res = await fetch(BASE, {
-            headers: getAuthHeaders(),
+    async login(email, password) {
+        const res = await fetch(`${BASE}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
         });
-        return handleResponse(res);
+        const response = await handleResponse(res);
+        return response;
     },
 
-    async getOrderById(id) {
-        const res = await fetch(`${BASE}/${id}`, {
+    async getMe() {
+        const res = await fetch(`${BASE}/me`, {
             headers: getAuthHeaders(),
         });
         return handleResponse(res);
     },
 };
 
-export default orderService;
+export default authService;
+

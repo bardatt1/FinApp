@@ -1,16 +1,21 @@
 import React from 'react';
 import ProductCard from './ProductCard';
+import '../../styles/product-grid.css';
 
-export default function ProductGrid({ products = [], loading, error }) {
-    if (loading) return <div>Loading products...</div>;
-    if (error) return <div className="error">Error: {error}</div>;
-    if (!products || products.length === 0) return <div>No products found.</div>;
-
+export default function ProductGrid({ products = [] }) {
+  if (products.length === 0) {
     return (
-        <div className="product-grid">
-            {products.map((p) => (
-                <ProductCard key={p.id || p._id} product={p} />
-            ))}
-        </div>
+      <div className="product-grid-empty">
+        <p>No products found. Try adjusting your filters.</p>
+      </div>
     );
+  }
+
+  return (
+    <div className="product-grid">
+      {products.map(product => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
 }

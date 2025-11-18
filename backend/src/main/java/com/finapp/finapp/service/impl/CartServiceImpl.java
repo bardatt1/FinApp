@@ -92,8 +92,9 @@ public class CartServiceImpl implements CartService {
         List<CartDto.CartLine> lines = cart.getItems().stream().map(ci -> {
             Product p = ci.getProduct();
             String cat = p.getCategory() != null ? p.getCategory().getName() : null;
+            String imageUrl = p.getImageUrl();
             double lineTotal = p.getPrice() * ci.getQuantity();
-            return new CartDto.CartLine(p.getId(), p.getName(), cat, p.getPrice(), ci.getQuantity(), lineTotal);
+            return new CartDto.CartLine(p.getId(), p.getName(), cat, p.getPrice(), imageUrl, ci.getQuantity(), lineTotal);
         }).collect(Collectors.toList());
         double total = lines.stream().mapToDouble(CartDto.CartLine::lineTotal).sum();
         return new CartDto(cart.getId(), lines, total);

@@ -13,17 +13,29 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    
+    // Client-side validation
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+    
     setLoading(true);
 
     try {
-      const result = await login(email, password);
+      const result = await login(email.trim(), password);
       if (result.success) {
-        navigate("/");
+        // Redirect to shop page after successful login
+        navigate("/shop");
       } else {
-        setError(result.message);
+        setError(result.message || "Login failed. Please check your credentials.");
       }
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -72,7 +84,15 @@ const LoginPage = () => {
             </button>
           </div>
 
-          <button type="submit" style={styles.loginButton} disabled={loading}>
+          <button 
+            type="submit" 
+            style={{
+              ...styles.loginButton,
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }} 
+            disabled={loading}
+          >
             {loading ? "LOGGING IN..." : "LOGIN"}
           </button>
 
