@@ -110,7 +110,6 @@ const LoginPage = () => {
             Discover stylish merch, manage your budget, and shop effortlessly —
             all in one platform made for smart shoppers like you.
           </p>
-          <button style={styles.shopNowBtn}>Start Shopping</button>
         </div>
       </div>
     </div>

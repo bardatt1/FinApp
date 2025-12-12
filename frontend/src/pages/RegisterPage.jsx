@@ -181,7 +181,6 @@ const RegisterPage = () => {
           <p style={styles.welcomeDesc}>
            Sign up today and unlock access to the latestmerch apparel designed for true fans of smart fashion.
           </p>
-          <button style={styles.shopNowBtn}>Explore Merch</button>
         </div>
       </div>
     </div>
