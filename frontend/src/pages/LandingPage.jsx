@@ -50,7 +50,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/premium-apparel-collection.jpg" alt="Premium apparel collection" />
+          <img src="/pictures/Ferrari merch.jpg" alt="Premium apparel collection" />
         </div>
       </section>
 
@@ -61,7 +61,9 @@ const LandingPage = () => {
         
         <div className="collection-grid">
           <div className="collection-card">
-            <div className="collection-image">👕</div>
+            <div className="collection-image">
+              <img src="/pictures/Basket.jpg" alt="Essential Basics" />
+            </div>
             <div className="collection-content">
               <h3>Essential Basics</h3>
               <p>Timeless pieces for everyday wear</p>
@@ -70,7 +72,9 @@ const LandingPage = () => {
           </div>
 
           <div className="collection-card">
-            <div className="collection-image">🧥</div>
+            <div className="collection-image">
+              <img src="/pictures/ferr.jpg" alt="Premium Outerwear" />
+            </div>
             <div className="collection-content">
               <h3>Premium Outerwear</h3>
               <p>Statement layers for every season</p>
@@ -79,7 +83,9 @@ const LandingPage = () => {
           </div>
 
           <div className="collection-card">
-            <div className="collection-image">🎽</div>
+            <div className="collection-image">
+              <img src="/pictures/active.jpg" alt="Active Wear" />
+            </div>
             <div className="collection-content">
               <h3>Active Wear</h3>
               <p>Performance meets style</p>
@@ -93,7 +99,7 @@ const LandingPage = () => {
       <section className="about" id="about">
         <div className="about-content">
           <div className="about-image">
-            <img src="/luxury-fashion-studio-workspace.jpg" alt="About FinApp" />
+            <img src="/pictures/fa.jpg" alt="About FinApp" />
           </div>
           <div className="about-text">
             <h2>Crafted for Excellence</h2>
