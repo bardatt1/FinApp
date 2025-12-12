@@ -75,15 +75,6 @@ const LoginPage = () => {
             />
           </div>
 
-          <div style={styles.options}>
-            <label style={styles.checkboxLabel}>
-              <input type="checkbox" style={styles.checkbox} /> Remember me
-            </label>
-            <button style={styles.forgotPassword}>
-              Forgot password?
-            </button>
-          </div>
-
           <button 
             type="submit" 
             style={{
@@ -185,22 +176,6 @@ const styles = {
     borderRadius: "25px",
     fontSize: "14px",
     outline: "none",
-  },
-  options: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: "13px",
-    marginBottom: "20px",
-    color: "#444",
-  },
-  checkboxLabel: {
-    display: "flex",
-    alignItems: "center",
-  },
-  checkbox: { marginRight: "5px" },
-  forgotPassword: {
-    color: "#a42c2c",
-    textDecoration: "none",
   },
   loginButton: {
     width: "100%",
