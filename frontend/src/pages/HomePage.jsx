@@ -10,7 +10,6 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const scrollRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,17 +48,6 @@ function HomePage() {
     rating: 4.5, // Default rating since API doesn't provide it
     reviews: 0
   }));
-
-  const scrollToIndex = (index) => {
-    if (scrollRef.current) {
-      const cardWidth = 280 + 32; // card width + gap
-      scrollRef.current.scrollTo({
-        left: index * cardWidth,
-        behavior: 'smooth'
-      });
-      setCurrentIndex(index);
-    }
-  };
 
   return (
     <main className="page home-page">
@@ -107,16 +95,6 @@ function HomePage() {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="scroll-indicators">
-          {featuredProducts.map((_, index) => (
-            <div
-              key={index}
-              className={`scroll-dot ${currentIndex === index ? 'active' : ''}`}
-              onClick={() => scrollToIndex(index)}
-            />
-          ))}
         </div>
 
         <div className="view-all">

@@ -8,3 +8,5 @@ public record ChangePasswordRequestDto(
         @NotBlank @Size(min = 6, max = 100) String newPassword
 ) {}
 
+
+

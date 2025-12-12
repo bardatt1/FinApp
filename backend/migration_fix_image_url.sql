@@ -7,3 +7,5 @@ ALTER TABLE product MODIFY COLUMN image_url LONGTEXT;
 -- Verify the change
 DESCRIBE product;
 
+
+

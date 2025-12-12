@@ -108,19 +108,7 @@ const LoginPage = () => {
               </span>
             </p>
           </div>
-          
-          <div style={styles.demoCredentials}>
-            <p style={styles.demoTitle}>Demo Credentials:</p>
-            <p style={styles.demoText}>User: user@finapp.com / password123</p>
-            <p style={styles.demoText}>Admin: admin@finapp.com / admin123</p>
-          </div>
         </form>
-
-        <div style={styles.dots}>
-          <span style={styles.dot}></span>
-          <span style={{ ...styles.dot, backgroundColor: "#a42c2c" }}></span>
-          <span style={styles.dot}></span>
-        </div>
       </div>
 
       {/* RIGHT PANEL WITH MERCH BACKGROUND */}
@@ -231,18 +219,6 @@ const styles = {
     textDecoration: "none",
     cursor: "pointer",
   },
-  dots: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "30px",
-  },
-  dot: {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    backgroundColor: "#ccc",
-    margin: "0 4px",
-  },
   rightPanel: {
     flex: 1.5,
     borderTopLeftRadius: "20px",
@@ -295,22 +271,6 @@ const styles = {
     marginBottom: "15px",
     fontSize: "14px",
     textAlign: "center",
-  },
-  demoCredentials: {
-    marginTop: "20px",
-    padding: "10px",
-    backgroundColor: "#f5f5f5",
-    borderRadius: "5px",
-    fontSize: "12px",
-  },
-  demoTitle: {
-    fontWeight: "600",
-    marginBottom: "5px",
-    color: "#333",
-  },
-  demoText: {
-    margin: "2px 0",
-    color: "#666",
   },
 };
 
