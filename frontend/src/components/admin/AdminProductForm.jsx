@@ -45,16 +45,37 @@ export default function AdminProductForm({ product, onSave, onCancel, isOpen }) 
   const validate = () => {
     const newErrors = {};
     
+    // Name validation
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length > 200) {
+      newErrors.name = 'Name must be less than 200 characters';
     }
     
-    if (!formData.price || parseFloat(formData.price) <= 0) {
+    // Description validation
+    if (formData.description && formData.description.length > 2000) {
+      newErrors.description = 'Description must be less than 2000 characters';
+    }
+    
+    // Price validation
+    const price = parseFloat(formData.price);
+    if (!formData.price || isNaN(price) || price <= 0) {
       newErrors.price = 'Price must be greater than 0';
+    } else if (price > 100000) {
+      newErrors.price = 'Price must be less than $100,000';
     }
     
+    // Category validation
     if (!formData.category) {
       newErrors.category = 'Category is required';
+    }
+    
+    // Image URL validation (if provided)
+    if (formData.imageUrl && formData.imageUrl.trim()) {
+      const urlPattern = /^(https?:\/\/|data:image)/;
+      if (!urlPattern.test(formData.imageUrl.trim())) {
+        newErrors.imageUrl = 'Image URL must be a valid http/https URL or data URL';
+      }
     }
     
     setErrors(newErrors);
@@ -102,13 +123,18 @@ export default function AdminProductForm({ product, onSave, onCancel, isOpen }) 
       
       await onSave(productData);
     } catch (error) {
-      console.error('Form submission error:', error);
+      // Error logged without sensitive details
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Form submission error:', error.message);
+      }
       let errorMessage = 'Failed to save product';
       
       if (error.message.includes('ERR_CONNECTION_RESET') || error.message.includes('Failed to fetch')) {
-        errorMessage = 'Cannot connect to server. Please ensure the backend is running on http://localhost:8080';
+        errorMessage = 'Unable to connect to server. Please try again later.';
       } else if (error.message) {
-        errorMessage = error.message;
+        // Sanitize error message - don't expose system details
+        errorMessage = error.message.replace(/http:\/\/localhost:\d+/g, '[server]');
+        errorMessage = errorMessage.replace(/localhost/g, '[server]');
       }
       
       setErrors({ submit: errorMessage });

@@ -65,7 +65,7 @@ export const productService = {
         } catch (error) {
             console.error('Error creating product:', error);
             if (error.message.includes('ERR_CONNECTION_RESET') || error.message.includes('Failed to fetch')) {
-                throw new Error('Cannot connect to server. Please ensure the backend is running on http://localhost:8080');
+                throw new Error('Unable to connect to server. Please try again later.');
             }
             throw error;
         }

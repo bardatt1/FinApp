@@ -62,14 +62,25 @@ function CheckoutPage() {
     
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
+    } else if (formData.fullName.trim().length > 100) {
+      newErrors.fullName = 'Full name must be less than 100 characters';
     }
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
+    } else {
+      const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = 'Invalid email format';
+      }
     }
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
+    } else {
+      // Basic phone validation (allows various formats)
+      const phoneRegex = /^[\d\s\-\+\(\)]{10,20}$/;
+      if (!phoneRegex.test(formData.phone.trim())) {
+        newErrors.phone = 'Please enter a valid phone number';
+      }
     }
     if (!formData.address.trim()) {
       newErrors.address = 'Address is required';
@@ -82,6 +93,12 @@ function CheckoutPage() {
     }
     if (!formData.zipCode.trim()) {
       newErrors.zipCode = 'Zip code is required';
+    } else {
+      // Basic zip code validation (5 digits or 5+4 format)
+      const zipRegex = /^\d{5}(-\d{4})?$/;
+      if (!zipRegex.test(formData.zipCode.trim())) {
+        newErrors.zipCode = 'Please enter a valid zip code (e.g., 12345 or 12345-6789)';
+      }
     }
     if (!formData.country.trim()) {
       newErrors.country = 'Country is required';
@@ -122,8 +139,11 @@ function CheckoutPage() {
       // Redirect to profile page with order confirmation
       navigate(`/profile?order=${order.id}`);
     } catch (error) {
-      console.error('Error placing order:', error);
-      setOrderError(error.message || 'Failed to place order. Please try again.');
+      // Sanitize error message
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error placing order:', error.message);
+      }
+      setOrderError('Failed to place order. Please try again.');
     } finally {
       setSubmitting(false);
     }

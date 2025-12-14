@@ -22,12 +22,26 @@ const RegisterPage = () => {
       setError("First name is required");
       return;
     }
+    if (firstName.trim().length > 50) {
+      setError("First name must be less than 50 characters");
+      return;
+    }
     if (!lastName.trim()) {
       setError("Last name is required");
       return;
     }
+    if (lastName.trim().length > 50) {
+      setError("Last name must be less than 50 characters");
+      return;
+    }
     if (!email.trim()) {
       setError("Email is required");
+      return;
+    }
+    // Enhanced email validation
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (!emailRegex.test(email.trim())) {
+      setError("Please enter a valid email address");
       return;
     }
     if (!password.trim()) {
@@ -38,8 +52,21 @@ const RegisterPage = () => {
       setError("Passwords do not match!");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long!");
+    // Enhanced password validation
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long!");
+      return;
+    }
+    if (!/[A-Z]/.test(password)) {
+      setError("Password must contain at least one uppercase letter!");
+      return;
+    }
+    if (!/[a-z]/.test(password)) {
+      setError("Password must contain at least one lowercase letter!");
+      return;
+    }
+    if (!/[0-9]/.test(password)) {
+      setError("Password must contain at least one number!");
       return;
     }
 

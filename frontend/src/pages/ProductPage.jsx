@@ -3,16 +3,30 @@ import { useParams } from 'react-router-dom';
 import { productService } from '../services/api/productService';
 import ProductDetail from '../components/product/ProductDetail';
 
+import { validateProductId } from '../utils/validation';
+import { useNavigate } from 'react-router-dom';
+
 export default function ProductPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        // Validate product ID
+        const validation = validateProductId(id);
+        if (!validation.valid) {
+            setError(validation.error || 'Invalid product ID');
+            setLoading(false);
+            // Redirect to shop after a short delay
+            setTimeout(() => navigate('/shop'), 2000);
+            return;
+        }
+
         let mounted = true;
         setLoading(true);
-        productService.getById(id)
+        productService.getById(validation.id)
             .then((p) => { 
                 if (mounted) {
                     setProduct({
@@ -29,7 +43,7 @@ export default function ProductPage() {
                 if (mounted) setLoading(false); 
             });
         return () => { mounted = false; };
-    }, [id]);
+    }, [id, navigate]);
 
     if (loading) {
         return (
