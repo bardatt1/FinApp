@@ -2,7 +2,7 @@ import React from 'react';
 import ProductCard from './ProductCard';
 import '../../styles/product-grid.css';
 
-export default function ProductGrid({ products = [] }) {
+function ProductGrid({ products = [] }) {
   if (products.length === 0) {
     return (
       <div className="product-grid-empty">
@@ -19,3 +19,5 @@ export default function ProductGrid({ products = [] }) {
     </div>
   );
 }
+
+export default React.memo(ProductGrid);

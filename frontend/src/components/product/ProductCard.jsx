@@ -4,7 +4,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/product-card.css';
 
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   const [isHovered, setIsHovered] = useState(false);
   const [adding, setAdding] = useState(false);
   const { addToCart } = useCart();
@@ -113,3 +113,5 @@ export default function ProductCard({ product }) {
     </div>
   );
 }
+
+export default React.memo(ProductCard);

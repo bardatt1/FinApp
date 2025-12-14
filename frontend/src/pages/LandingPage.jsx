@@ -50,7 +50,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/pictures/Ferrari merch.jpg" alt="Premium apparel collection" />
+          <img src="/pictures/hero-collection.png" alt="Premium apparel collection" />
         </div>
       </section>
 
@@ -62,33 +62,33 @@ const LandingPage = () => {
         <div className="collection-grid">
           <div className="collection-card">
             <div className="collection-image">
-              <img src="/pictures/Basket.jpg" alt="Essential Basics" />
+              <img src="/pictures/tshirt-white.png" alt="T-Shirts & Basics" />
             </div>
             <div className="collection-content">
-              <h3>Essential Basics</h3>
-              <p>Timeless pieces for everyday wear</p>
+              <h3>T-Shirts & Basics</h3>
+              <p>Classic essentials with the iconic FA logo</p>
               <a href="#shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }}>Explore Collection →</a>
             </div>
           </div>
 
           <div className="collection-card">
             <div className="collection-image">
-              <img src="/pictures/ferr.jpg" alt="Premium Outerwear" />
+              <img src="/pictures/hoodie-grey.png" alt="Hoodies & Sweaters" />
             </div>
             <div className="collection-content">
-              <h3>Premium Outerwear</h3>
-              <p>Statement layers for every season</p>
+              <h3>Hoodies & Sweaters</h3>
+              <p>Comfortable layers for every season</p>
               <a href="#shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }}>Explore Collection →</a>
             </div>
           </div>
 
           <div className="collection-card">
             <div className="collection-image">
-              <img src="/pictures/active.jpg" alt="Active Wear" />
+              <img src="/pictures/sweatpants-grey.png" alt="Bottoms & Accessories" />
             </div>
             <div className="collection-content">
-              <h3>Active Wear</h3>
-              <p>Performance meets style</p>
+              <h3>Bottoms & Accessories</h3>
+              <p>Complete your look with style</p>
               <a href="#shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }}>Explore Collection →</a>
             </div>
           </div>
@@ -99,7 +99,7 @@ const LandingPage = () => {
       <section className="about" id="about">
         <div className="about-content">
           <div className="about-image">
-            <img src="/pictures/fa.jpg" alt="About FinApp" />
+            <img src="/pictures/about-craftsmanship.png" alt="About FinApp" />
           </div>
           <div className="about-text">
             <h2>Crafted for Excellence</h2>

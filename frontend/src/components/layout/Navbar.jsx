@@ -17,8 +17,7 @@ function Navbar() {
       }, 200);
       return () => clearTimeout(timer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]); // Refresh when user changes
+  }, [user?.id, refreshCart]); // Refresh when user changes or refreshCart function changes
 
   const handleLogout = () => {
     logout();

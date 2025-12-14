@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "../styles/login.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -42,56 +43,52 @@ const LoginPage = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="login-container" style={{ backgroundImage: "url('/pictures/ferrr.jpg')" }}>
       {/* LEFT LOGIN PANEL */}
-      <div style={styles.leftPanel}>
-        <div style={styles.logo}>FINAPP</div>
+      <div className="login-left-panel">
+        <div className="login-logo">FINAPP</div>
 
-        <div style={styles.avatar}>
-          <i className="fas fa-user" style={styles.icon}></i>
+        <div className="login-avatar">
+          <i className="fas fa-user login-avatar-icon"></i>
         </div>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {error && <div style={styles.errorMessage}>{error}</div>}
+        <form onSubmit={handleSubmit} className="login-form">
+          {error && <div className="login-error-message">{error}</div>}
           
-          <div style={styles.inputContainer}>
+          <div className="login-input-container">
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
+              className="login-input"
               required
             />
           </div>
-          <div style={styles.inputContainer}>
+          <div className="login-input-container">
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
+              className="login-input"
               required
             />
           </div>
 
           <button 
             type="submit" 
-            style={{
-              ...styles.loginButton,
-              opacity: loading ? 0.7 : 1,
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }} 
+            className="login-button"
             disabled={loading}
           >
             {loading ? "LOGGING IN..." : "LOGIN"}
           </button>
 
-          <div style={styles.registerSection}>
-            <p style={styles.noAccountText}>
+          <div className="login-register-section">
+            <p className="login-no-account-text">
               Don't have an account?
               <span
-                style={styles.registerLink}
+                className="login-register-link"
                 onClick={() => navigate("/register")}
               >
                 {" "}
@@ -103,10 +100,10 @@ const LoginPage = () => {
       </div>
 
       {/* RIGHT PANEL WITH MERCH BACKGROUND */}
-      <div style={styles.rightPanel}>
-        <div style={styles.overlay}>
-          <h1 style={styles.welcomeText}>Shop Smarter with FINAPP</h1>
-          <p style={styles.welcomeDesc}>
+      <div className="login-right-panel" style={{ backgroundImage: "url('/pictures/ferrr.jpg')" }}>
+        <div className="login-overlay">
+          <h1 className="login-welcome-text">Shop Smarter with FINAPP</h1>
+          <p className="login-welcome-desc">
             Discover stylish merch, manage your budget, and shop effortlessly —
             all in one platform made for smart shoppers like you.
           </p>
@@ -114,153 +111,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    height: "100vh",
-    width: "100%",
-    fontFamily: "Poppins, sans-serif",
-    backgroundImage: "url('/pictures/ferrr.jpg')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    position: "relative",
-  },
-  leftPanel: {
-    flex: 1,
-    backgroundColor: "rgba(255,255,255,0.7)",
-    borderTopRightRadius: "20px",
-    borderBottomRightRadius: "20px",
-    boxShadow: "2px 0 20px rgba(0,0,0,0.1)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backdropFilter: "blur(10px)",
-    position: "relative",
-  },
-  logo: {
-    fontSize: "1.8rem",
-    fontWeight: "700",
-    color: "#a42c2c",
-    marginBottom: "25px",
-  },
-  avatar: {
-    width: "70px",
-    height: "70px",
-    backgroundColor: "#a42c2c",
-    borderRadius: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "25px",
-  },
-  icon: {
-    color: "#fff",
-    fontSize: "30px",
-  },
-  form: {
-    width: "80%",
-    maxWidth: "320px",
-  },
-  inputContainer: {
-    marginBottom: "15px",
-  },
-  input: {
-    width: "100%",
-    padding: "12px 15px",
-    border: "1.5px solid #a42c2c",
-    borderRadius: "25px",
-    fontSize: "14px",
-    outline: "none",
-  },
-  loginButton: {
-    width: "100%",
-    padding: "12px",
-    border: "none",
-    borderRadius: "25px",
-    backgroundColor: "#a42c2c",
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: "15px",
-    cursor: "pointer",
-    boxShadow: "0 3px 10px rgba(164,44,44,0.3)",
-    marginBottom: "15px",
-  },
-  registerSection: {
-    textAlign: "center",
-    marginTop: "10px",
-  },
-  noAccountText: { fontSize: "13px", color: "#444" },
-  registerLink: {
-    color: "#a42c2c",
-    fontWeight: "600",
-    textDecoration: "none",
-    cursor: "pointer",
-  },
-  rightPanel: {
-    flex: 1.5,
-    borderTopLeftRadius: "20px",
-    borderBottomLeftRadius: "20px",
-    backgroundImage: "url('/pictures/ferrr.jpg')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#fff",
-    position: "relative",
-  },
-  overlay: {
-    backgroundColor: "rgba(0,0,0,0.3)",
-    textAlign: "center",
-    maxWidth: "500px",
-    padding: "40px 30px",
-    borderRadius: "20px",
-    backdropFilter: "blur(8px)",
-  },
-  welcomeText: {
-    fontSize: "2.8rem",
-    fontWeight: "700",
-    marginBottom: "15px",
-    color: "#fff",
-    textShadow: "0 2px 10px rgba(0,0,0,0.5)",
-    filter: "blur(0.5px)",
-    opacity: 0.9,
-  },
-  welcomeDesc: {
-    fontSize: "1.1rem",
-    lineHeight: "1.6",
-    marginBottom: "25px",
-    color: "#f5f5f5",
-    textShadow: "0 2px 8px rgba(0,0,0,0.5)",
-    filter: "blur(0.3px)",
-    opacity: 0.85,
-  },
-  shopNowBtn: {
-    backgroundColor: "rgba(255,255,255,0.9)",
-    color: "#a42c2c",
-    border: "none",
-    borderRadius: "25px",
-    padding: "12px 28px",
-    fontWeight: "600",
-    fontSize: "15px",
-    cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(255,255,255,0.3)",
-    backdropFilter: "blur(4px)",
-  },
-  errorMessage: {
-    backgroundColor: "#ffebee",
-    color: "#c62828",
-    padding: "10px",
-    borderRadius: "5px",
-    marginBottom: "15px",
-    fontSize: "14px",
-    textAlign: "center",
-  },
 };
 
 export default LoginPage;
