@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { orderService } from '../services/api/orderService';
+import ConfirmModal from '../components/ui/ConfirmModal';
 import '../styles/profile.css';
 
 function ProfilePage() {
@@ -11,6 +12,8 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancellingOrderId, setCancellingOrderId] = useState(null);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -70,32 +73,34 @@ function ProfilePage() {
     }
   };
 
-  const handleCancelOrder = async (orderId) => {
-    // Show confirmation dialog
-    const confirmed = window.confirm(
-      '⚠️ WARNING: Are you sure you want to cancel this order?\n\n' +
-      'Once cancelled, you will not be able to retrieve this order. ' +
-      'This action cannot be undone.\n\n' +
-      'Do you want to proceed?'
-    );
+  const handleCancelOrderClick = (orderId) => {
+    setOrderToCancel(orderId);
+    setCancelModalOpen(true);
+  };
 
-    if (!confirmed) {
-      return;
-    }
+  const handleCancelOrderConfirm = async () => {
+    if (!orderToCancel) return;
 
     try {
-      setCancellingOrderId(orderId);
-      await orderService.cancelOrder(orderId);
+      setCancellingOrderId(orderToCancel);
+      setCancelModalOpen(false);
+      await orderService.cancelOrder(orderToCancel);
       
       // Refresh orders list
       const ordersData = await orderService.getMyOrders();
       setOrders(Array.isArray(ordersData) ? ordersData : []);
     } catch (err) {
       console.error('Error cancelling order:', err);
-      alert(err.message || 'Failed to cancel order. Please try again.');
+      setError(err.message || 'Failed to cancel order. Please try again.');
     } finally {
       setCancellingOrderId(null);
+      setOrderToCancel(null);
     }
+  };
+
+  const handleCancelModalClose = () => {
+    setCancelModalOpen(false);
+    setOrderToCancel(null);
   };
 
   const canCancelOrder = (status) => {
@@ -179,8 +184,7 @@ function ProfilePage() {
                     <div key={order.id} className="order-card">
                       <div className="order-header">
                         <div className="order-info">
-                          <h3>Order #{order.id}</h3>
-                          <p className="order-date">{formatDate(order.createdAt)}</p>
+                          <h3 className="order-date">{formatDate(order.createdAt)}</h3>
                         </div>
                         <div className="order-status-badge" style={{ backgroundColor: getStatusColor(order.status) }}>
                           {order.status || 'PLACED'}
@@ -212,7 +216,7 @@ function ProfilePage() {
                         </div>
                         {canCancelOrder(order.status) && (
                           <button
-                            onClick={() => handleCancelOrder(order.id)}
+                            onClick={() => handleCancelOrderClick(order.id)}
                             disabled={cancellingOrderId === order.id}
                             className="btn-cancel-order"
                           >
@@ -228,6 +232,21 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Cancel Order Confirmation Modal */}
+      <ConfirmModal
+        isOpen={cancelModalOpen}
+        onClose={handleCancelModalClose}
+        onConfirm={handleCancelOrderConfirm}
+        title="Cancel Order"
+        message={[
+          "Are you sure you want to cancel this order?",
+          "This action cannot be undone. Once cancelled, you will not be able to retrieve or modify this order."
+        ]}
+        confirmText="Yes, Cancel Order"
+        cancelText="Keep Order"
+        type="danger"
+      />
     </div>
   );
 }
