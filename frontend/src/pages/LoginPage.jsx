@@ -43,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container" style={{ backgroundImage: "url('/pictures/ferrr.jpg')" }}>
+    <div className="login-container" style={{ backgroundImage: "url('/pictures/auth-background.png')" }}>
       {/* LEFT LOGIN PANEL */}
       <div className="login-left-panel">
         <div className="login-logo">FINAPP</div>
@@ -100,7 +100,7 @@ const LoginPage = () => {
       </div>
 
       {/* RIGHT PANEL WITH MERCH BACKGROUND */}
-      <div className="login-right-panel" style={{ backgroundImage: "url('/pictures/ferrr.jpg')" }}>
+      <div className="login-right-panel" style={{ backgroundImage: "url('/pictures/auth-background.png')" }}>
         <div className="login-overlay">
           <h1 className="login-welcome-text">Shop Smarter with FINAPP</h1>
           <p className="login-welcome-desc">
