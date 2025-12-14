@@ -14,11 +14,11 @@ function CheckoutPage() {
     fullName: '',
     email: '',
     phone: '',
-    address: '',
+    streetAddress: '',
+    barangay: '',
     city: '',
-    state: '',
-    zipCode: '',
-    country: ''
+    province: '',
+    postalCode: ''
   });
   
   const [errors, setErrors] = useState({});
@@ -76,32 +76,42 @@ function CheckoutPage() {
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     } else {
-      // Basic phone validation (allows various formats)
-      const phoneRegex = /^[\d\s\-\+\(\)]{10,20}$/;
-      if (!phoneRegex.test(formData.phone.trim())) {
-        newErrors.phone = 'Please enter a valid phone number';
+      // Philippine phone number validation
+      // Accepts: +639123456789, 09123456789, 9123456789, +6321234567, 021234567
+      const phoneRegex = /^(\+63|0)?[9]\d{9}$|^(\+63|0)?[2-8]\d{8}$/;
+      const cleanedPhone = formData.phone.trim().replace(/[\s\-\(\)]/g, '');
+      if (!phoneRegex.test(cleanedPhone)) {
+        newErrors.phone = 'Please enter a valid Philippine phone number (e.g., +639123456789 or 09123456789)';
       }
     }
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
+    if (!formData.streetAddress.trim()) {
+      newErrors.streetAddress = 'Street address is required';
+    } else if (formData.streetAddress.trim().length > 200) {
+      newErrors.streetAddress = 'Street address must be less than 200 characters';
+    }
+    if (!formData.barangay.trim()) {
+      newErrors.barangay = 'Barangay is required';
+    } else if (formData.barangay.trim().length > 100) {
+      newErrors.barangay = 'Barangay must be less than 100 characters';
     }
     if (!formData.city.trim()) {
-      newErrors.city = 'City is required';
+      newErrors.city = 'City/Municipality is required';
+    } else if (formData.city.trim().length > 100) {
+      newErrors.city = 'City/Municipality must be less than 100 characters';
     }
-    if (!formData.state.trim()) {
-      newErrors.state = 'State is required';
+    if (!formData.province.trim()) {
+      newErrors.province = 'Province is required';
+    } else if (formData.province.trim().length > 100) {
+      newErrors.province = 'Province must be less than 100 characters';
     }
-    if (!formData.zipCode.trim()) {
-      newErrors.zipCode = 'Zip code is required';
+    if (!formData.postalCode.trim()) {
+      newErrors.postalCode = 'Postal code is required';
     } else {
-      // Basic zip code validation (5 digits or 5+4 format)
-      const zipRegex = /^\d{5}(-\d{4})?$/;
-      if (!zipRegex.test(formData.zipCode.trim())) {
-        newErrors.zipCode = 'Please enter a valid zip code (e.g., 12345 or 12345-6789)';
+      // Philippine postal code validation (4 digits)
+      const postalRegex = /^\d{4}$/;
+      if (!postalRegex.test(formData.postalCode.trim())) {
+        newErrors.postalCode = 'Please enter a valid 4-digit Philippine postal code (e.g., 1000)';
       }
-    }
-    if (!formData.country.trim()) {
-      newErrors.country = 'Country is required';
     }
     
     setErrors(newErrors);
@@ -213,7 +223,7 @@ function CheckoutPage() {
                   {errors.email && <span className="error-message">{errors.email}</span>}
                 </div>
                 <div className="form-group">
-                  <label htmlFor="phone">Phone *</label>
+                  <label htmlFor="phone">Phone Number *</label>
                   <input
                     type="tel"
                     id="phone"
@@ -221,29 +231,49 @@ function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleChange}
                     className={errors.phone ? 'error' : ''}
+                    placeholder="e.g., +639123456789 or 09123456789"
                     required
                   />
                   {errors.phone && <span className="error-message">{errors.phone}</span>}
+                  <small style={{ display: 'block', marginTop: '0.25rem', color: '#666' }}>
+                    Philippine mobile or landline number
+                  </small>
                 </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="address">Address *</label>
+                <label htmlFor="streetAddress">Street Address *</label>
                 <input
                   type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
+                  id="streetAddress"
+                  name="streetAddress"
+                  value={formData.streetAddress}
                   onChange={handleChange}
-                  className={errors.address ? 'error' : ''}
+                  className={errors.streetAddress ? 'error' : ''}
+                  placeholder="e.g., 123 Main Street, Building Name"
                   required
                 />
-                {errors.address && <span className="error-message">{errors.address}</span>}
+                {errors.streetAddress && <span className="error-message">{errors.streetAddress}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="barangay">Barangay *</label>
+                <input
+                  type="text"
+                  id="barangay"
+                  name="barangay"
+                  value={formData.barangay}
+                  onChange={handleChange}
+                  className={errors.barangay ? 'error' : ''}
+                  placeholder="e.g., Barangay Poblacion"
+                  required
+                />
+                {errors.barangay && <span className="error-message">{errors.barangay}</span>}
               </div>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="city">City *</label>
+                  <label htmlFor="city">City/Municipality *</label>
                   <input
                     type="text"
                     id="city"
@@ -251,50 +281,46 @@ function CheckoutPage() {
                     value={formData.city}
                     onChange={handleChange}
                     className={errors.city ? 'error' : ''}
+                    placeholder="e.g., Manila, Quezon City"
                     required
                   />
                   {errors.city && <span className="error-message">{errors.city}</span>}
                 </div>
                 <div className="form-group">
-                  <label htmlFor="state">State *</label>
+                  <label htmlFor="province">Province *</label>
                   <input
                     type="text"
-                    id="state"
-                    name="state"
-                    value={formData.state}
+                    id="province"
+                    name="province"
+                    value={formData.province}
                     onChange={handleChange}
-                    className={errors.state ? 'error' : ''}
+                    className={errors.province ? 'error' : ''}
+                    placeholder="e.g., Metro Manila, Laguna, Cebu"
                     required
                   />
-                  {errors.state && <span className="error-message">{errors.state}</span>}
+                  {errors.province && <span className="error-message">{errors.province}</span>}
                 </div>
                 <div className="form-group">
-                  <label htmlFor="zipCode">Zip Code *</label>
+                  <label htmlFor="postalCode">Postal Code *</label>
                   <input
                     type="text"
-                    id="zipCode"
-                    name="zipCode"
-                    value={formData.zipCode}
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
                     onChange={handleChange}
-                    className={errors.zipCode ? 'error' : ''}
+                    className={errors.postalCode ? 'error' : ''}
+                    placeholder="e.g., 1000"
+                    maxLength="4"
                     required
                   />
-                  {errors.zipCode && <span className="error-message">{errors.zipCode}</span>}
+                  {errors.postalCode && <span className="error-message">{errors.postalCode}</span>}
                 </div>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="country">Country *</label>
-                <input
-                  type="text"
-                  id="country"
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  className={errors.country ? 'error' : ''}
-                  required
-                />
-                {errors.country && <span className="error-message">{errors.country}</span>}
+              <div className="form-group" style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
+                <small style={{ color: '#666' }}>
+                  <strong>Country:</strong> Philippines (default)
+                </small>
               </div>
 
               <button 
@@ -358,3 +384,4 @@ function CheckoutPage() {
 }
 
 export default CheckoutPage;
+
